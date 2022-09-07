@@ -3,6 +3,9 @@
         <h3 class="text-center">Edit Borrower</h3>
         <div class="row">
             <div class="col-md-6">
+                <div v-for="(errArray, index) in validate" :key="index" class="mb-2">
+                    <p class="mb-0 text-danger">{{ errArray }} </p>
+                </div>
                 <form @submit.prevent="updateBorrower">
                     <div class="form-group">
                         <label>Business Name</label>
@@ -56,6 +59,10 @@
                         <label>Step</label>
                         <input type="text" class="form-control" v-model="borrower.step">
                     </div>
+                    <div class="form-group">
+                        <label>Steps Array</label>
+                        <li v-for="step in steps" :value="step">{{ step }}</li>
+                    </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
@@ -67,7 +74,9 @@
 export default {
     data() {
         return {
-            borrower: {}
+            borrower: {},
+            steps: {},
+            validate: ''
         }
     },
     created() {
@@ -75,6 +84,7 @@ export default {
             .get(`https://project-exercise.test/api/borrowers/${this.$route.params.id}`)
             .then((res) => {
                 this.borrower = res.data;
+                this.steps = JSON.parse(res.data.steps);
             });
     },
     methods: {
@@ -82,8 +92,12 @@ export default {
             this.axios
                 .patch(`https://project-exercise.test/api/borrowers/${this.$route.params.id}`, this.borrower)
                 .then((res) => {
-                    this.$router.push({ name: 'home' });
-                });
+                    this.$router.push({name: 'home'});
+                })
+                .catch(err => {
+                    this.validate = err.response.data.errors
+                })
+                .finally(() => this.loading = false);
         }
     }
 }

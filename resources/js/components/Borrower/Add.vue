@@ -3,6 +3,9 @@
         <h3 class="text-center">Create Borrower</h3>
         <div class="row">
             <div class="col-md-6">
+                <div v-for="(errArray, index) in validate" :key="index" class="mb-2">
+                    <p class="mb-0 text-danger">{{ errArray }} </p>
+                </div>
                 <form @submit.prevent="addBorrower">
                     <div class="form-group">
                         <label>Business Name</label>
@@ -67,7 +70,8 @@
 export default {
     data() {
         return {
-            borrower: {}
+            borrower: {},
+            validate: ''
         }
     },
     methods: {
@@ -75,9 +79,11 @@ export default {
             this.axios
                 .post('https://project-exercise.test/api/borrowers', this.borrower)
                 .then(response => (
-                    this.$router.push({ name: 'home' })
+                    this.$router.push({name: 'home'})
                 ))
-                .catch(err => console.log(err))
+                .catch(err => {
+                    this.validate = err.response.data.errors
+                })
                 .finally(() => this.loading = false)
         }
     }

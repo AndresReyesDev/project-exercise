@@ -2203,7 +2203,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      borrower: {}
+      borrower: {},
+      validate: ''
     };
   },
   methods: {
@@ -2215,7 +2216,7 @@ __webpack_require__.r(__webpack_exports__);
           name: 'home'
         });
       })["catch"](function (err) {
-        return console.log(err);
+        _this.validate = err.response.data.errors;
       })["finally"](function () {
         return _this.loading = false;
       });
@@ -2276,7 +2277,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      borrower: {}
+      borrower: {},
+      steps: {},
+      validate: ''
     };
   },
   created: function created() {
@@ -2284,6 +2287,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.axios.get("https://project-exercise.test/api/borrowers/".concat(this.$route.params.id)).then(function (res) {
       _this.borrower = res.data;
+      _this.steps = JSON.parse(res.data.steps);
     });
   },
   methods: {
@@ -2294,6 +2298,10 @@ __webpack_require__.r(__webpack_exports__);
         _this2.$router.push({
           name: 'home'
         });
+      })["catch"](function (err) {
+        _this2.validate = err.response.data.errors;
+      })["finally"](function () {
+        return _this2.loading = false;
       });
     }
   }
@@ -2376,7 +2384,14 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6"
-  }, [_c("form", {
+  }, [_vm._l(_vm.validate, function (errArray, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "mb-2"
+    }, [_c("p", {
+      staticClass: "mb-0 text-danger"
+    }, [_vm._v(_vm._s(errArray) + " ")])]);
+  }), _vm._v(" "), _c("form", {
     on: {
       submit: function submit($event) {
         $event.preventDefault();
@@ -2684,7 +2699,7 @@ var render = function render() {
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("Create")])])])])]);
+  }, [_vm._v("Create")])])], 2)])]);
 };
 
 var staticRenderFns = [];
@@ -2773,7 +2788,14 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6"
-  }, [_c("form", {
+  }, [_vm._l(_vm.validate, function (errArray, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "mb-2"
+    }, [_c("p", {
+      staticClass: "mb-0 text-danger"
+    }, [_vm._v(_vm._s(errArray) + " ")])]);
+  }), _vm._v(" "), _c("form", {
     on: {
       submit: function submit($event) {
         $event.preventDefault();
@@ -3076,12 +3098,20 @@ var render = function render() {
         _vm.$set(_vm.borrower, "step", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("button", {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", [_vm._v("Steps Array")]), _vm._v(" "), _vm._l(_vm.steps, function (step) {
+    return _c("li", {
+      attrs: {
+        value: step
+      }
+    }, [_vm._v(_vm._s(step))]);
+  })], 2), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("Update")])])])])]);
+  }, [_vm._v("Update")])])], 2)])]);
 };
 
 var staticRenderFns = [];
